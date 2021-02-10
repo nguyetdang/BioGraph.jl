@@ -8,10 +8,14 @@ end
 
 function _label_map_array_to_dict(l::Array{NodeLabel}=NodeLabel[])
     l_dict = Dict()
+    l_s_dict = Dict()
+    l_i_dict = Dict()
     for l_dummy::NodeLabel in l
         l_dict[l_dummy.node] = l_dummy.label
+        l_s_dict[l_dummy.node] = l_dummy.sequence
+        l_i_dict[l_dummy.node] = l_dummy.info
     end
-    return l_dict
+    return l_dict, l_s_dict, l_i_dict
 end
 
 function _weight_from_dict(w_dict::Dict)
@@ -43,4 +47,23 @@ function _edge_label_from_dict(e_o_dict::Dict, e_i_dict::Dict)
         push!(e, EdgeLabel(s, d, o, i))
     end
     return e
+end
+
+function _edge_label_array_to_dict(e::Array{EdgeLabel}=EdgeLabel[])
+    e_o_dict = Dict() 
+    e_i_dict = Dict()
+    for e_dummy::EdgeLabel in e
+        e_name = e_dummy.src * "::" * e_dummy.dst
+        e_o_dict[e_name] = e_dummy.overlap
+        e_i_dict[e_name] = e_dummy.info
+    end
+    return e_o_dict, e_i_dict
+end
+
+function _sg_map_array_to_dict(sg::Array{SubGraphMap}=SubGraphMap[])
+    sg_dict = Dict()
+    for sg_dummy::SubGraphMap in sg
+        sg_dict[sg_dummy.node] = sg_dummy.master_node
+    end
+    return sg_dict
 end
