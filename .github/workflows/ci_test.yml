@@ -10,7 +10,7 @@ on:
       - '*'
     tags: '*'
 jobs:
-test:
+  test:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -25,10 +25,10 @@ test:
         arch:
           - x64
     steps:
-        - uses: actions/checkout@v2
-        - uses: julia-actions/setup-julia@latest
-          with:
-            version: ${{ matrix.version }}
-            arch: ${{ matrix.arch }}
-        - uses: julia-actions/julia-buildpkg@master
-        - uses: julia-actions/julia-runtest@master
+      - uses: actions/checkout@v2
+      - uses: julia-actions/setup-julia@latest
+        with:
+          version: ${{ matrix.version }}
+          arch: ${{ matrix.arch }}
+      - uses: julia-actions/julia-buildpkg@master
+      - uses: julia-actions/julia-runtest@master
