@@ -1,0 +1,4 @@
+name = "BioGraph"
+uuid = "bbceaa37-9423-4c65-8842-740620a24309"
+authors = ["Dang Thi Minh Nguyet <thi-minh-nguyet.dang@ird.fr>"]
+version = "0.1.0"
