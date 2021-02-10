@@ -1,3 +1,4 @@
 [deps]
 LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
+Suppressor = "fd094767-a336-5f1f-9728-57cf17d0bbfb"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

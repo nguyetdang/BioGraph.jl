@@ -18,3 +18,28 @@ struct EdgeLabel
     overlap::String
     info::String
 end
+
+# Graph Component
+
+struct SubGraphMap
+    node::Int64
+    master_node::Int64
+end
+
+mutable struct GraphResult
+    g::SimpleDiGraph
+    sg_map::Array{SubGraphMap}
+    node_label::Array{NodeLabel}
+    weight::Array{Weight}
+    edge_label::Array{EdgeLabel}
+    source_node::Array{NodeLabel}
+    sink_node::Array{NodeLabel}
+    GraphResult() = new()
+end
+
+mutable struct GraphComponent
+    graph::Array{GraphResult}
+    lone_node::Array{GraphResult}
+    lone_cycle::Array{GraphResult}
+    GraphComponent() = new()
+end
