@@ -14,7 +14,7 @@
     Weight(6, 11),
     Weight(1, 2)
     ]
-    l_test = [NodeLabel(7, "4\t-", "AGTGGGACAT", ""),
+    l_test = [NodeLabel(7, "4\t-", "TACAGGGTGA", ""),
     NodeLabel(4, "4\t+", "TACAGGGTGA", ""),
     NodeLabel(2, "2\t+", "TTAACTCCATCTTTGAGAAACATTTAATAATGTAATGTGTTTGT", ""),
     NodeLabel(3, "3\t+", "CA", ""),
