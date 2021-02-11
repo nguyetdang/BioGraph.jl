@@ -1,3 +1,14 @@
+"""
+    find_longest_path(graph_result::BioGraph.GraphResult, optimizer_factory; has_cycle::Bool, is_weighted::Bool, source_node::Int64, sink_node::Int64)
+
+Find longest path in graph. Input:
+
+- `GraphResult`
+- JuMP optimizer_factory such as `CPLEX.Optimizer`
+- `has_cycle`: if `true` find longest path which has cycles.
+- `is_weighted`: if `true` find shortest path which is weighted
+- `source_node`, `sink_node`: find longest path which has source and sink nodes.
+"""
 function find_longest_path(graph_result::GraphResult, optimizer_factory; has_cycle::Bool=false, is_weighted::Bool=true, source_node::Int64=0, sink_node::Int64=0)
     g = copy(graph_result.g)
 
@@ -164,6 +175,11 @@ function find_longest_path(graph_result::GraphResult, optimizer_factory; has_cyc
     return LongestPath(graph_result, g_opt, path, label_path, obj)
 end
 
+"""
+    get_gfa(g_result::BioGraph.LongestPath; outfile::String)
+
+Get GFA output of `LongestPath`.
+"""
 function get_gfa(longest_path::LongestPath; outfile::String)
     g_result = longest_path.graph
     lp_result = longest_path.label_path
@@ -200,6 +216,11 @@ function get_gfa(longest_path::LongestPath; outfile::String)
     end
 end
 
+"""
+    get_fasta(g_result::BioGraph.LongestPath; outfile::String)
+
+Get FastA output of `LongestPath`.
+"""
 function get_fasta(longest_path::LongestPath; outfile::String="")
     g_result = longest_path.graph
     lp_result = longest_path.label_path

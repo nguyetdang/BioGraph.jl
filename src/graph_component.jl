@@ -1,3 +1,12 @@
+"""
+    find_graph_component(gfa_result::BioGraph.GFAResult)
+
+Return graph components of `GFAResult`:
+
+- Simple Graphs
+- Lone Cycles
+- Lone Nodes
+"""
 function find_graph_component(gfa_result::GFAResult)
     source_nodes::Array{Int64} = Int64[]
     sink_nodes::Array{Int64} = Int64[]
@@ -117,12 +126,27 @@ function find_graph_component(gfa_result::GFAResult)
     return graphs
 end
 
+"""
+    get_summary(g_coms::BioGraph.GraphComponent)
+
+Summary of `GraphComponent`.
+"""
 function get_summary(g_coms::GraphComponent)
     println("No of simple graphs: " * string(length(g_coms.graph)))
     println("No of lone cycles: " * string(length(g_coms.lone_cycle)))
     println("No of lone nodes: " * string(length(g_coms.lone_node)))
 end
 
+"""
+    get_summary(g_coms::BioGraph.GraphResult)
+
+Summary of `GraphResult`:
+
+- No of vertices
+- No of edges
+- No of source nodes
+- No of end nodes
+"""
 function get_summary(g_result::GraphResult)
     println("No of vertices: " * string(nv(g_result.g)))
     println("No of edges: " * string(ne(g_result.g)))
@@ -130,6 +154,11 @@ function get_summary(g_result::GraphResult)
     println("No of sink_node: " * string(length(g_result.sink_node)))
 end
 
+"""
+    get_terminus(g_result::BioGraph.GraphResult; outfile::String)
+
+Get all source and sink nodes of `GraphResult`. Write to CSV, including data from GFA.
+"""
 function get_terminus(g_result::GraphResult; outfile::String="")
     if outfile != ""
         sink_name = outfile * "_sink_node.csv"
@@ -161,6 +190,11 @@ function get_terminus(g_result::GraphResult; outfile::String="")
     return g_result.source_node, g_result.sink_node
 end
 
+"""
+    get_gfa(g_result::BioGraph.GraphResult; outfile::String)
+
+Get GFA output of `GraphResult`.
+"""
 function get_gfa(g_result::GraphResult; outfile::String)
     open(outfile, "w") do io
         write(io, "H\tVN:Z:1.0" * "\n")
