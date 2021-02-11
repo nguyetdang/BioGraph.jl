@@ -1,3 +1,9 @@
+"""
+    read_from_gfa(filename::AbstractString)
+
+Read graph from GFA file and return `GFAResult` struct which 
+has `g` - the graph, `w` - weight array, `l` - node label array and `e` - edge label array.
+"""
 function read_from_gfa(filename::AbstractString)
     u = readlines(filename);
     l_dict = Dict()
