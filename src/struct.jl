@@ -43,3 +43,13 @@ mutable struct GraphComponent
     lone_cycle::Array{GraphResult}
     GraphComponent() = new()
 end
+
+# Longest Path
+
+mutable struct LongestPath
+    graph::GraphResult
+    g_opt::SimpleDiGraph
+    path::Array{Int64}
+    label_path::Array{String}
+    obj::Int64
+end

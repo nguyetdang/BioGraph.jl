@@ -67,3 +67,28 @@ function _sg_map_array_to_dict(sg::Array{SubGraphMap}=SubGraphMap[])
     end
     return sg_dict
 end
+
+function _g_opt_to_path(g_opt::SimpleDiGraph, source_nodes::Array{Int64})
+    dis_arr = []
+    edges_arr = []
+    for node in source_nodes
+        edges = a_star(g_opt, node, nv(g_opt))
+        push!(edges_arr, edges)
+        push!(dis_arr, length(edges))
+    end
+    max_edges = edges_arr[findmax(dis_arr)[2]]
+    path = Int64[]
+    for e in max_edges
+        push!(path, e.src)
+    end
+    return path
+end
+
+function _label_path(graph_result::GraphResult, path::Array{Int64})
+    l_dict, l_s_dict, l_i_dict = _label_map_array_to_dict(graph_result.node_label)
+    label_path = String[]
+    for node in path
+        push!(label_path, l_dict[node])
+    end
+    return label_path
+end

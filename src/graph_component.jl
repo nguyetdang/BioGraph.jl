@@ -88,7 +88,7 @@ function find_graph_component(g::SimpleDiGraph; w::Array{Weight}=Weight[], l::Ar
                 end
             else
                 for i in 1:nv(sg)
-                    push!(g_dummy.weight, Weight(i, w_dict[vmap[1]]))
+                    push!(g_dummy.weight, Weight(i, w_dict[vmap[i]]))
                 end
             end
             if e == []
