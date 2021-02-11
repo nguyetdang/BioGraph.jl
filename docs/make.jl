@@ -13,7 +13,7 @@ makedocs(
 )
 
 deploydocs(
-    repo="https://github.com/nguyetdang/BioGraph.jl",
+    repo="github.com/nguyetdang/BioGraph.jl.git",
     devbranch = "main",
     devurl = "dev"
 )
