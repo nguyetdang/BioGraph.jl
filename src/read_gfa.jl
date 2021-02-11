@@ -27,7 +27,7 @@ function read_from_gfa(filename::AbstractString)
                     l_dict[i] = l_dummy[2] * "\t-"
                     w_dict[i] = l_w_dict[l_dummy[2] * "\t+"]
                     l_w_dict[l_dict[i]] = w_dict[i]
-                    l_s_dict[l_dict[i]] = reverse(l_s_dict[l_dummy[2] * "\t+"])
+                    l_s_dict[l_dict[i]] = l_s_dict[l_dummy[2] * "\t+"]
                     l_i_dict[l_dict[i]] = l_i_dict[l_dummy[2] * "\t+"]
                     i += 1
                 end
@@ -38,7 +38,7 @@ function read_from_gfa(filename::AbstractString)
                     l_dict[i] = l_dummy[4] * "\t-"
                     w_dict[i] = l_w_dict[l_dummy[4] * "\t+"]
                     l_w_dict[l_dict[i]] = w_dict[i]
-                    l_s_dict[l_dict[i]] = reverse(l_s_dict[l_dummy[4] * "\t+"])
+                    l_s_dict[l_dict[i]] = l_s_dict[l_dummy[4] * "\t+"]
                     l_i_dict[l_dict[i]] = l_i_dict[l_dummy[4] * "\t+"]
                     i += 1
                 end
