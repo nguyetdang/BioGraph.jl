@@ -19,6 +19,13 @@ struct EdgeLabel
     info::String
 end
 
+struct GFAResult
+    g::SimpleDiGraph
+    w::Array{Weight}
+    l::Array{NodeLabel}
+    e::Array{EdgeLabel}
+end
+
 # Graph Component
 
 struct SubGraphMap

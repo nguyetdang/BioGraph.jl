@@ -62,5 +62,5 @@ function read_from_gfa(filename::AbstractString)
         add_edge!(g, reverse_l_dict[link[1]], reverse_l_dict[link[2]])
     end
 
-    return g, l, w, e
+    return GFAResult(g, w, l, e)
 end

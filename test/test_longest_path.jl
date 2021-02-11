@@ -1,6 +1,6 @@
 @testset "Longest Path" begin
-    g, l, w, e = read_from_gfa("data/gfa_sample_1.gfa");
-    res = find_graph_component(g, l=l, w=w, e=e);
+    gfa_result = read_from_gfa("data/gfa_sample_1.gfa");
+    res = find_graph_component(gfa_result);
     longest = find_longest_path(res.graph[1], Cbc.Optimizer, is_weighted = true, has_cycle = true);
     fasta = get_fasta(longest)
     longest_p_test = [7,2,3,4,5,6]
@@ -9,8 +9,8 @@
     @test longest.path == longest_p_test
     @test longest.label_path == longest_lp_test
     @test fasta == fasta_test
-    g_2, l_2, w_2, e_2 = read_from_gfa("data/gfa_sample_3.gfa");
-    res_2 = find_graph_component(g_2, l=l_2, w=w_2, e=e_2);
+    gfa_result_2 = read_from_gfa("data/gfa_sample_3.gfa");
+    res_2 = find_graph_component(gfa_result_2);
     longest_2 = find_longest_path(res_2.graph[1], Cbc.Optimizer, is_weighted = false, has_cycle = true);
     fasta_2 = get_fasta(longest_2)
     longest_p_test_2 = [7,1,2,3,4,5,6]

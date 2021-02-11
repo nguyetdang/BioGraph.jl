@@ -1,6 +1,6 @@
 @testset "Summary" begin
-    g, l, w, e = read_from_gfa("data/gfa_sample_2.gfa")
-    res = find_graph_component(g, l=l, w=w, e=e)
+    gfa_result = read_from_gfa("data/gfa_sample_2.gfa")
+    res = find_graph_component(gfa_result)
     result = @capture_out get_summary(res)
     s_test = "No of simple graphs: 2\nNo of lone cycles: 1\nNo of lone nodes: 1\n"
     @test result == s_test

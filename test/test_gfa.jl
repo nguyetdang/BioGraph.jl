@@ -29,7 +29,11 @@
     EdgeLabel("4\t+", "5\t+", "0M", ""),
     EdgeLabel("3\t+", "4\t+", "0M", "")
     ]
-    g, l, w, e = read_from_gfa("data/gfa_sample_1.gfa");
+    gfa_result = read_from_gfa("data/gfa_sample_1.gfa");
+    g = gfa_result.g
+    w = gfa_result.w
+    l = gfa_result.l
+    e = gfa_result.e
     @test g == g_test
     @test w == w_test
     @test e == e_test

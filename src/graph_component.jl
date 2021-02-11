@@ -1,8 +1,13 @@
-function find_graph_component(g::SimpleDiGraph; w::Array{Weight}=Weight[], l::Array{NodeLabel}=NodeLabel[], e::Array{EdgeLabel}=EdgeLabel[])
+function find_graph_component(gfa_result::GFAResult)
     source_nodes::Array{Int64} = Int64[]
     sink_nodes::Array{Int64} = Int64[]
     start_nodes::Array{Int64} = Int64[]
     end_nodes::Array{Int64} = Int64[]
+
+    g = gfa_result.g
+    w = gfa_result.w
+    l = gfa_result.l
+    e = gfa_result.e
 
     l_dict, l_s_dict, l_i_dict = _label_map_array_to_dict(l)
     w_dict = _weight_array_to_dict(w)
