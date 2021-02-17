@@ -8,6 +8,8 @@
 
 BioGraph is a Julia package for handle genome graph in the GFA format. It reads information from GFA input, extract simple bidirected graphs and find the longest linear path in those graphs.
 
+[Complete documentation is available here](https://nguyetdang.github.io/BioGraph.jl/stable)
+
 ## Installation
 You can install BioSequences from the julia
 REPL. Press `]` to enter pkg mode, and enter the following:
