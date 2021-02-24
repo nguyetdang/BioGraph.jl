@@ -39,3 +39,17 @@
     @test e == e_test
     @test l == l_test
 end
+
+@testset "Read GFA with weight" begin
+    w_test = [Weight(7, 4),
+    Weight(4, 4),
+    Weight(2, 7),
+    Weight(3, 6),
+    Weight(5, 11),
+    Weight(6, 52),
+    Weight(1, 2)
+    ]
+    gfa_result = read_from_gfa("data/gfa_sample_1.gfa"; weight_file = "data/weight.csv")
+    w = gfa_result.w
+    @test w == w_test
+end
