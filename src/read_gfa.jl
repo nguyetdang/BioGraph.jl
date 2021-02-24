@@ -4,7 +4,7 @@
 Read graph from GFA file and return `GFAResult` struct which 
 has `g` - the graph, `w` - weight array, `l` - node label array and `e` - edge label array.
 """
-function read_from_gfa(filename::AbstractString)
+function read_from_gfa(filename::String; weight_file::String)
     u = readlines(filename);
     l_dict = Dict()
     w_dict = Dict()
