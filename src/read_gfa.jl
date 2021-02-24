@@ -1,10 +1,10 @@
 """
-    read_from_gfa(filename::AbstractString)
+    read_from_gfa(filename::AbstractString; weight_file::String)
 
-Read graph from GFA file and return `GFAResult` struct which 
+Read graph from GFA file and optional weight_file (contains two column `node` and `weight`) and return `GFAResult` struct which 
 has `g` - the graph, `w` - weight array, `l` - node label array and `e` - edge label array.
 """
-function read_from_gfa(filename::String; weight_file::String)
+function read_from_gfa(filename::String; weight_file::String="")
     u = readlines(filename);
     l_dict = Dict()
     w_dict = Dict()
@@ -14,12 +14,25 @@ function read_from_gfa(filename::String; weight_file::String)
     links = Tuple[]
     e_o_dict = Dict()
     e_i_dict = Dict()
+
+    if weight_file != ""
+        w_f_dict = Dict()
+        f = CSV.File(weight_file)
+        for row in f
+            w_f_dict[string(row.node)] = row.weight
+        end
+    end
+
     i = 1
     for line in u
         if line[1] == 'S'
             s_dummy = split(line, "\t")
             l_dict[i] = s_dummy[2] * "\t+"
-            w_dict[i] = length(s_dummy[3])
+            if weight_file != ""
+                w_dict[i] = w_f_dict[s_dummy[2]]
+            else
+                w_dict[i] = length(s_dummy[3])
+            end
             l_w_dict[l_dict[i]] = w_dict[i]
             l_w_dict[s_dummy[2] * "\t-"] = 0
             l_s_dict[l_dict[i]] = s_dummy[3]
