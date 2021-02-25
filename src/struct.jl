@@ -19,11 +19,17 @@ struct EdgeLabel
     info::String
 end
 
+struct Path
+    name::String
+    path::Array{Int64}
+end
+
 struct GFAResult
     g::SimpleDiGraph
     w::Array{Weight}
     l::Array{NodeLabel}
     e::Array{EdgeLabel}
+    p::Array{Path}
 end
 
 # Graph Component
@@ -41,6 +47,7 @@ mutable struct GraphResult
     edge_label::Array{EdgeLabel}
     source_node::Array{NodeLabel}
     sink_node::Array{NodeLabel}
+    path::Array{Path}
     GraphResult() = new()
 end
 

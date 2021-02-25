@@ -17,6 +17,7 @@ function find_graph_component(gfa_result::GFAResult)
     w = gfa_result.w
     l = gfa_result.l
     e = gfa_result.e
+    p = gfa_result.p
 
     l_dict, l_s_dict, l_i_dict = _label_map_array_to_dict(l)
     w_dict = _weight_array_to_dict(w)
@@ -42,6 +43,7 @@ function find_graph_component(gfa_result::GFAResult)
             sg, vmap = induced_subgraph(g, com)
             g_dummy.edge_label = []
             g_dummy.g = sg
+            g_dummy.path = []
             if l == []
                 g_dummy.node_label = [NodeLabel(1, string(vmap[1]), "", "")]
                 g_dummy.source_node = [NodeLabel(1, string(vmap[1]), "", "")]
@@ -70,11 +72,27 @@ function find_graph_component(gfa_result::GFAResult)
             end
             sg_dict = _sg_map_array_to_dict(g_dummy.sg_map)
             reverse_sg_dict = Dict(value => key for (key, value) in sg_dict)
+
+
             g_dummy.node_label = []
             g_dummy.source_node = []
             g_dummy.sink_node = []
             g_dummy.weight = []
             g_dummy.edge_label = []
+            g_dummy.path = []
+
+            if p != []
+                for p_dummy in p
+                    if p_dummy.path[1] in vmap
+                        p_arr = []
+                        for p_index in p_dummy.path
+                            push!(p_arr, reverse_sg_dict[p_index])
+                        end
+                        push!(g_dummy.path, Path(p_dummy.name,p_arr))
+                    end
+                end
+            end
+
             if l == []
                 for i in 1:nv(sg)
                     push!(g_dummy.node_label, NodeLabel(i, string(vmap[i]), "", ""))
@@ -146,12 +164,14 @@ Summary of `GraphResult`:
 - No of edges
 - No of source nodes
 - No of end nodes
+- No of path
 """
 function get_summary(g_result::GraphResult)
     println("No of vertices: " * string(nv(g_result.g)))
     println("No of edges: " * string(ne(g_result.g)))
     println("No of source_node: " * string(length(g_result.source_node)))
     println("No of sink_node: " * string(length(g_result.sink_node)))
+    println("No of path: " * string(length(g_result.path)))
 end
 
 """
