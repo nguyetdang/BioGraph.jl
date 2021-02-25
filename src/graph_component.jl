@@ -40,6 +40,7 @@ function find_graph_component(gfa_result::GFAResult)
     for com in g_com
         if length(com) == 1
             g_dummy = GraphResult()
+            g_dummy.weight_inherited = gfa_result.weight_inherited
             sg, vmap = induced_subgraph(g, com)
             g_dummy.edge_label = []
             g_dummy.g = sg
@@ -64,6 +65,7 @@ function find_graph_component(gfa_result::GFAResult)
             sg_source = collect(intersect(Set(source_nodes), Set(com)))
             sg_sink = collect(intersect(Set(sink_nodes), Set(com)))
             g_dummy = GraphResult()
+            g_dummy.weight_inherited = gfa_result.weight_inherited
             sg, vmap = induced_subgraph(g, com)
             g_dummy.g = sg
             g_dummy.sg_map = []

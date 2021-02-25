@@ -19,4 +19,11 @@
     @test longest_2.path == longest_p_test_2
     @test longest_2.label_path == longest_lp_test_2
     @test fasta_2 == fasta_test_2
+    gfa_result_3 = read_from_gfa("data/gfa_sample_4.gfa");
+    res_3 = find_graph_component(gfa_result_3);
+    longest_3 = find_longest_path(res_3.graph[1], Cbc.Optimizer, is_weighted = false);
+    fasta_3 = get_fasta(longest_3)
+    @test longest_3.path == longest_p_test_2
+    @test longest_3.label_path == longest_lp_test_2
+    @test fasta_3 == fasta_test_2
 end

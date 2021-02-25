@@ -12,7 +12,10 @@ Find longest path in graph. Input:
 function find_longest_path(graph_result::GraphResult, optimizer_factory; 
     #has_cycle::Bool=false, 
     is_weighted::Bool=true, source_node::Int64=0, sink_node::Int64=0, has_path::String="")
+    
     g = copy(graph_result.g)
+    e_o_dict, e_i_dict = _edge_label_array_to_dict(graph_result.edge_label)
+    l_dict, l_s_dict, l_i_dict = _label_map_array_to_dict(graph_result.node_label)
 
     start_nodes = []
     end_nodes = []
@@ -57,7 +60,18 @@ function find_longest_path(graph_result::GraphResult, optimizer_factory;
     weight_e = []
     for e in array_e
         if is_weighted
-            push!(weight_e, w_dict[e.src])
+            if graph_result.weight_inherited
+                push!(weight_e, w_dict[e.src])
+            else
+                if e.dst == nv(g)
+                    push!(weight_e, w_dict[e.src])
+                else
+                    e_name = l_dict[e.src] * "::" * l_dict[e.dst]
+                    overlap = e_o_dict[e_name]
+                    overlap_int = parse(Int64, chop(overlap))
+                    push!(weight_e, w_dict[e.src]-overlap_int)
+                end
+            end
         else
             push!(weight_e, 1)
         end
@@ -287,6 +301,7 @@ function get_fasta(longest_path::LongestPath; outfile::String="")
     g_result = longest_path.graph
     lp_result = longest_path.label_path
     l_dict, l_s_dict, l_i_dict = _label_map_array_to_dict(g_result.node_label)
+    e_o_dict, e_i_dict = _edge_label_array_to_dict(g_result.edge_label)
     lp_dict = Dict()
     
     for i in 1:length(l_dict)
@@ -298,8 +313,15 @@ function get_fasta(longest_path::LongestPath; outfile::String="")
         end
     end
     fasta_output = ""
-    for label in lp_result
-        fasta_output = fasta_output*lp_dict[label]
+    for i in 1:length(lp_result)
+        if i == length(lp_result)
+            fasta_output = fasta_output*lp_dict[lp_result[i]]
+        else
+            e_name = lp_result[i] * "::" * lp_result[i+1]
+            overlap = e_o_dict[e_name]
+            overlap_int = parse(Int64, chop(overlap))
+            fasta_output = fasta_output*chop(lp_dict[lp_result[i]], tail = overlap_int)
+        end
     end
     if outfile != ""
         open(outfile, "w") do io

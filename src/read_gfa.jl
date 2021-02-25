@@ -1,8 +1,8 @@
 """
-    read_from_gfa(filename::AbstractString; weight_file::String)
+    read_from_gfa(filename::String; weight_file::String)
 
 Read graph from GFA file and optional weight_file (contains two column `node` and `weight`) and return `GFAResult` struct which 
-has `g` - the graph, `w` - weight array, `l` - node label array and `e` - edge label array.
+has `g` - the graph, `w` - weight array, `l` - node label array, `e` - edge label array and `p` - path array.
 """
 function read_from_gfa(filename::String; weight_file::String="")
     u = readlines(filename);
@@ -102,6 +102,9 @@ function read_from_gfa(filename::String; weight_file::String="")
         end
         push!(p, Path(name, path))
     end
-
-    return GFAResult(g, w, l, e, p)
+    if weight_file != ""
+        return GFAResult(g, w, l, e, p, false)
+    else
+        return GFAResult(g, w, l, e, p, false)
+    end
 end

@@ -30,6 +30,7 @@ struct GFAResult
     l::Array{NodeLabel}
     e::Array{EdgeLabel}
     p::Array{Path}
+    weight_inherited::Bool
 end
 
 # Graph Component
@@ -48,6 +49,7 @@ mutable struct GraphResult
     source_node::Array{NodeLabel}
     sink_node::Array{NodeLabel}
     path::Array{Path}
+    weight_inherited::Bool
     GraphResult() = new()
 end
 
