@@ -1,8 +1,8 @@
 """
-    read_from_gfa(filename::AbstractString; weight_file::String)
+    read_from_gfa(filename::String; weight_file::String)
 
 Read graph from GFA file and optional weight_file (contains two column `node` and `weight`) and return `GFAResult` struct which 
-has `g` - the graph, `w` - weight array, `l` - node label array and `e` - edge label array.
+has `g` - the graph, `w` - weight array, `l` - node label array, `e` - edge label array and `p` - path array.
 """
 function read_from_gfa(filename::String; weight_file::String="")
     u = readlines(filename);
@@ -14,6 +14,8 @@ function read_from_gfa(filename::String; weight_file::String="")
     links = Tuple[]
     e_o_dict = Dict()
     e_i_dict = Dict()
+    p_dict = Dict()
+    p::Array{Path} = Path[]
 
     if weight_file != ""
         w_f_dict = Dict()
@@ -66,6 +68,18 @@ function read_from_gfa(filename::String; weight_file::String="")
             e_o_dict[e_name] = l_dummy[6]
             e_i_dict[e_name] = SubString(line, length(l_dummy[1] * "\t" * l_dummy[2] * "\t" * l_dummy[3] * "\t" * l_dummy[4] * "\t" * l_dummy[5] * "\t" * l_dummy[6] * "\t") + 1)
             push!(links, (k_start, k_end))
+        elseif line[1] == 'P'
+            p_dummy = split(line, "\t")
+            path_name = p_dummy[2]
+            p_extract = split(p_dummy[3], ",")
+            p_arr = []
+            for i = 1:(length(p_extract))
+                last_char = p_extract[i][length(p_extract[i])]
+                extracted = chop(p_extract[i])
+                extracted = extracted * "\t" * last_char
+                push!(p_arr, extracted)
+            end
+            p_dict[path_name] = p_arr
         end
     end
 
@@ -81,5 +95,16 @@ function read_from_gfa(filename::String; weight_file::String="")
         add_edge!(g, reverse_l_dict[link[1]], reverse_l_dict[link[2]])
     end
 
-    return GFAResult(g, w, l, e)
+    for (name, p_arr) in p_dict
+        path = []
+        for i = 1:length(p_arr)
+            push!(path, reverse_l_dict[p_arr[i]])
+        end
+        push!(p, Path(name, path))
+    end
+    if weight_file != ""
+        return GFAResult(g, w, l, e, p, false)
+    else
+        return GFAResult(g, w, l, e, p, false)
+    end
 end
