@@ -35,9 +35,9 @@
     l = gfa_result.l
     e = gfa_result.e
     @test g == g_test
-    @test w == w_test
+    @test sort(w, by = v -> v.node) == sort(w_test, by = v -> v.node)
     @test e == e_test
-    @test l == l_test
+    @test sort(l, by = v -> v.node) == sort(l_test, by = v -> v.node)
 end
 
 @testset "Read GFA with weight" begin
@@ -51,5 +51,5 @@ end
     ]
     gfa_result = read_from_gfa("data/gfa_sample_1.gfa"; weight_file = "data/weight.csv")
     w = gfa_result.w
-    @test w == w_test
+    @test sort(w, by = v -> v.node) == sort(w_test, by = v -> v.node)
 end

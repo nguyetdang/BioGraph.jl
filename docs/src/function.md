@@ -21,5 +21,5 @@ get_gfa(g_result::BioGraph.GraphResult; outfile::String)
 ```@docs
 find_longest_path
 get_gfa(g_result::BioGraph.LongestPath; outfile::String)
-get_fasta(g_result::BioGraph.LongestPath; outfile::String)
+get_fasta(g_result::BioGraph.LongestPath; header::String="linear_path", outdir::String="")
 ```
