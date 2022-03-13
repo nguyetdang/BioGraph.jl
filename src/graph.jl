@@ -1,4 +1,4 @@
-using LightGraphs
+using Graphs
 using GraphIO
 using ParserCombinator
 using JuMP

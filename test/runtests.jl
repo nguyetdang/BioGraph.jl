@@ -5,7 +5,7 @@ using BioGraph:
     Weight,
     NodeLabel,
     EdgeLabel
-using LightGraphs
+using Graphs
 using Suppressor
 using Cbc
 

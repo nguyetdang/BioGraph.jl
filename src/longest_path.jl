@@ -9,10 +9,10 @@ Find longest path in graph. Input:
 - `is_weighted`: if `true` find shortest path which is weighted
 - `source_node`, `sink_node`: find longest path which has source and sink nodes.
 """
-function find_longest_path(graph_result::GraphResult, optimizer_factory; 
+function find_longest_path(graph_result::GraphResult, optimizer_factory;
     #has_cycle::Bool=false, 
-    is_weighted::Bool=true, source_node::Int64=0, sink_node::Int64=0, has_path::String="")
-    
+    is_weighted::Bool = true, source_node::Int64 = 0, sink_node::Int64 = 0, has_path::String = "")
+
     g = copy(graph_result.g)
     e_o_dict, e_i_dict = _edge_label_array_to_dict(graph_result.edge_label)
     l_dict, l_s_dict, l_i_dict = _label_map_array_to_dict(graph_result.node_label)
@@ -69,17 +69,17 @@ function find_longest_path(graph_result::GraphResult, optimizer_factory;
                     e_name = l_dict[e.src] * "::" * l_dict[e.dst]
                     overlap = e_o_dict[e_name]
                     overlap_int = parse(Int64, chop(overlap))
-                    push!(weight_e, w_dict[e.src]-overlap_int)
+                    push!(weight_e, w_dict[e.src] - overlap_int)
                 end
             end
         else
             push!(weight_e, 1)
         end
     end
-    
+
     println("Add constraint")
     first_node_constraint = []
-    if source_node > 0 
+    if source_node > 0
         for i in 1:length(array_e)
             if array_e[i].src == source_node
                 push!(first_node_constraint, i)
@@ -92,7 +92,7 @@ function find_longest_path(graph_result::GraphResult, optimizer_factory;
             end
         end
     end
-    
+
     end_node_constraint = []
     for i in 1:length(array_e)
         if array_e[i].dst == nv(g)
@@ -103,7 +103,7 @@ function find_longest_path(graph_result::GraphResult, optimizer_factory;
     in_dict = Dict()
     out_dict = Dict()
 
-    for i in 1:nv(g) - 1
+    for i in 1:nv(g)-1
         in_dict[i] = []
         out_dict[i] = []
     end
@@ -116,12 +116,12 @@ function find_longest_path(graph_result::GraphResult, optimizer_factory;
             push!(out_dict[array_e[j].src], j)
         end
     end
-    
+
     cycle_constraint = []
     cycle_length_constraint = []
 
     path_constraint = []
-    
+
     if has_path != ""
         dict_g = Dict()
         for i in 1:nv(g)
@@ -148,21 +148,21 @@ function find_longest_path(graph_result::GraphResult, optimizer_factory;
     i = 1
     if has_path == ""
         while true
-            model = Model();
-            set_optimizer(model, optimizer_factory);
+            model = Model()
+            set_optimizer(model, optimizer_factory)
             set_silent(model)
-            @variable(model, x[1:ne(g)], binary = true);
-            @objective(model, Max, sum(x[i] * weight_e[i] for i = 1:ne(g)));
-            @constraint(model, sum(x[i] for i in first_node_constraint) == 1);
-            @constraint(model, sum(x[i] for i in end_node_constraint) == 1);
-            for i in 1:nv(g) - 1
-                @constraint(model, sum(x[j] for j in in_dict[i]) <= 1);
-                @constraint(model, sum(x[j] for j in in_dict[i]) - sum(x[j] for j in out_dict[i]) == 0);
+            @variable(model, x[1:ne(g)], binary = true)
+            @objective(model, Max, sum(x[i] * weight_e[i] for i = 1:ne(g)))
+            @constraint(model, sum(x[i] for i in first_node_constraint) == 1)
+            @constraint(model, sum(x[i] for i in end_node_constraint) == 1)
+            for i in 1:nv(g)-1
+                @constraint(model, sum(x[j] for j in in_dict[i]) <= 1)
+                @constraint(model, sum(x[j] for j in in_dict[i]) - sum(x[j] for j in out_dict[i]) == 0)
             end
             for i in 1:length(cycle_constraint)
-                @constraint(model, sum(x[j] for j in cycle_constraint[i]) <= cycle_length_constraint[i] - 1);
+                @constraint(model, sum(x[j] for j in cycle_constraint[i]) <= cycle_length_constraint[i] - 1)
             end
-            optimize!(model);
+            optimize!(model)
             g_opt = SimpleDiGraph(nv(g))
             for i in 1:ne(g)
                 if value(x[i]) >= 0.5
@@ -186,32 +186,32 @@ function find_longest_path(graph_result::GraphResult, optimizer_factory;
         end
     else
         while true
-            model = Model();
-            set_optimizer(model, optimizer_factory);
+            model = Model()
+            set_optimizer(model, optimizer_factory)
             set_silent(model)
-            @variable(model, x[1:ne(g)], integer = true, lower_bound=0);
-            @objective(model, Max, sum(x[i] * weight_e[i] for i = 1:ne(g)));
-            @constraint(model, sum(x[i] for i in first_node_constraint) == 1);
-            @constraint(model, sum(x[i] for i in end_node_constraint) == 1);
+            @variable(model, x[1:ne(g)], integer = true, lower_bound = 0)
+            @objective(model, Max, sum(x[i] * weight_e[i] for i = 1:ne(g)))
+            @constraint(model, sum(x[i] for i in first_node_constraint) == 1)
+            @constraint(model, sum(x[i] for i in end_node_constraint) == 1)
             for i in 1:ne(g)
                 if dict_e_contraint[i] == 0
-                    @constraint(model, x[i]  <= 1);
+                    @constraint(model, x[i] <= 1)
                 else
-                    @constraint(model, x[i]  == dict_e_contraint[i]);
+                    @constraint(model, x[i] == dict_e_contraint[i])
                 end
             end
-            for i in 1:nv(g) - 1
+            for i in 1:nv(g)-1
                 if dict_g[i] == 0
-                    @constraint(model, sum(x[j] for j in in_dict[i]) <= 1);
+                    @constraint(model, sum(x[j] for j in in_dict[i]) <= 1)
                 else
-                    @constraint(model, sum(x[j] for j in in_dict[i]) == dict_g[i]);
+                    @constraint(model, sum(x[j] for j in in_dict[i]) == dict_g[i])
                 end
-                @constraint(model, sum(x[j] for j in in_dict[i]) - sum(x[j] for j in out_dict[i]) == 0);
+                @constraint(model, sum(x[j] for j in in_dict[i]) - sum(x[j] for j in out_dict[i]) == 0)
             end
             for i in 1:length(cycle_constraint)
-                @constraint(model, sum(x[j] for j in cycle_constraint[i]) <= cycle_length_constraint[i] - 1);
+                @constraint(model, sum(x[j] for j in cycle_constraint[i]) <= cycle_length_constraint[i] - 1)
             end
-            optimize!(model);
+            optimize!(model)
             g_opt = SimpleDiGraph(nv(g))
             for i in 1:ne(g)
                 if value(x[i]) >= 0.8
@@ -226,7 +226,7 @@ function find_longest_path(graph_result::GraphResult, optimizer_factory;
                     sg_source = collect(intersect(Set(source_nodes), Set(com)))
                     if length(sg_source) == 0
                         cycle_dump = []
-                        push!(cycle_length_constraint, length(com));
+                        push!(cycle_length_constraint, length(com))
                         for j in 1:length(array_e)
                             if array_e[j].src in com && array_e[j].dst in com
                                 push!(cycle_dump, j)
@@ -237,14 +237,14 @@ function find_longest_path(graph_result::GraphResult, optimizer_factory;
                         end
                     end
                 else
-                    lone_nodes+=1
+                    lone_nodes += 1
                 end
             end
-            println("objective: ", obj, ", num of lone cycle: ", length(g_opt_com)-lone_nodes - 1)
-            length(g_opt_com)-lone_nodes > 1 || break
+            println("objective: ", obj, ", num of lone cycle: ", length(g_opt_com) - lone_nodes - 1)
+            length(g_opt_com) - lone_nodes > 1 || break
         end
     end
-    
+
 
     path = _g_opt_to_path(g_opt, source_nodes)
     label_path = _label_path(graph_result, path)
@@ -280,8 +280,8 @@ function get_gfa(longest_path::LongestPath; outfile::String)
             end
         end
         Overlaps = ""
-        for i in 1:length(lp_result) - 1
-            e_name = lp_result[i] * "::" * lp_result[i + 1]
+        for i in 1:length(lp_result)-1
+            e_name = lp_result[i] * "::" * lp_result[i+1]
             if i < length(lp_result) - 1
                 Overlaps = Overlaps * e_o_dict[e_name] * ","
             else
@@ -293,21 +293,24 @@ function get_gfa(longest_path::LongestPath; outfile::String)
 end
 
 """
-    get_fasta(g_result::BioGraph.LongestPath; outfile::String)
+    get_fasta(g_result::BioGraph.LongestPath; header::String="linear_path", outdir::String="")
 
-Get FastA output of `LongestPath`.
+Get FastA and Bed output of `LongestPath`.
+Will not generate files if `outdir` was not specified. 
 """
-function get_fasta(longest_path::LongestPath; outfile::String="")
+function get_fasta(longest_path::LongestPath; header::String = "linear_path", outdir::String = "")
     g_result = longest_path.graph
     lp_result = longest_path.label_path
     l_dict, l_s_dict, l_i_dict = _label_map_array_to_dict(g_result.node_label)
     e_o_dict, e_i_dict = _edge_label_array_to_dict(g_result.edge_label)
     lp_dict = Dict()
-    
+    ld_dict = Dict()
+
     for i in 1:length(l_dict)
         lp_dummy = split(l_dict[i], "\t")
+        ld_dict[l_dict[i]] = lp_dummy[2]
         if lp_dummy[2] == "-"
-            lp_dict[l_dict[i]] = string(reverse_complement(LongDNASeq(l_s_dict[i])))
+            lp_dict[l_dict[i]] = string(reverse_complement(LongDNA{4}(l_s_dict[i])))
         else
             lp_dict[l_dict[i]] = l_s_dict[i]
         end
@@ -315,18 +318,43 @@ function get_fasta(longest_path::LongestPath; outfile::String="")
     fasta_output = ""
     for i in 1:length(lp_result)
         if i == length(lp_result)
-            fasta_output = fasta_output*lp_dict[lp_result[i]]
+            fasta_output = fasta_output * lp_dict[lp_result[i]]
         else
             e_name = lp_result[i] * "::" * lp_result[i+1]
             overlap = e_o_dict[e_name]
             overlap_int = parse(Int64, chop(overlap))
-            fasta_output = fasta_output*chop(lp_dict[lp_result[i]], tail = overlap_int)
+            fasta_output = fasta_output * chop(lp_dict[lp_result[i]], tail = overlap_int)
         end
     end
-    if outfile != ""
-        open(outfile, "w") do io
-            write(io, ">linear_path\n")
+    if outdir != ""
+        println("Writing File")
+        mkpath(outdir)
+        outfile_fasta = joinpath(outdir, header * ".fasta")
+        open(outfile_fasta, "w") do io
+            write(io, ">" * header * "\n")
             write(io, fasta_output)
+        end
+
+        outfile_bed = joinpath(outdir, header * ".bed")
+        open(outfile_bed, "w") do io
+            write(io, "Header \t Start \t End \t Segment \t Direction" * "\n")
+
+            start_pos = 1
+            for i in 1:length(lp_result)
+                if i == length(lp_result)
+                    end_pos = start_pos + length(lp_dict[lp_result[i]])
+                    write(io, header * "\t" * string(start_pos) * "\t" * string(end_pos) * "\t" * lp_result[i] * "\n")
+                    start_pos = end_pos + 1
+                else
+                    e_name = lp_result[i] * "::" * lp_result[i+1]
+                    overlap = e_o_dict[e_name]
+                    overlap_int = parse(Int64, chop(overlap))
+                    end_pos = start_pos + length(lp_dict[lp_result[i]])
+                    write(io, header * "\t" * string(start_pos) * "\t" * string(end_pos) * "\t" * lp_result[i] * "\n")
+                    start_pos = end_pos + 1 - overlap_int
+                end
+            end
+
         end
     end
     return fasta_output
