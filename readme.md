@@ -56,7 +56,7 @@ graph_component = find_graph_component(gfa)
 The length of graph_component indicates how many single graphs are availalbe in a GFA file. To find the longest path of a single graphs, please indicate the index corresponding to that graph:
 ```julia
 longest_path_1 = find_longest_path(graph_component.graph[1], Cbc.Optimizer, is_weighted = true)
-```julia
+```
 
 To output the longest path in FASTA and BED formats at current folder. Otherwise, provide the path to output directory:
 ```julia
