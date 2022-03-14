@@ -337,7 +337,7 @@ function get_fasta(longest_path::LongestPath; header::String = "linear_path", ou
 
         outfile_bed = joinpath(outdir, header * ".bed")
         open(outfile_bed, "w") do io
-            write(io, "Header \t Start \t End \t Segment \t Direction" * "\n")
+            write(io, "Header\tStart\tEnd\tSegment\tDirection" * "\n")
 
             start_pos = 1
             for i in 1:length(lp_result)
