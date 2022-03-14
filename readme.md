@@ -10,10 +10,55 @@ BioGraph is a Julia package for handle genome graph in the GFA format. It reads 
 
 [Complete documentation is available here](https://nguyetdang.github.io/BioGraph.jl/stable)
 
-## Installation
-You can install BioGraph from the julia
-REPL. Press `]` to enter pkg mode, and enter the following:
+## Installation instruction
+BioGraph.jl works at Julia LTS release v1.6.5 that can be downloaded at [https://julialang.org/downloads/](https://julialang.org/downloads/)
+
+To install BioGraph.jl the latest stable versions of BioGraph.jl, type in Julia
 
 ```julia
-add BioGraph
+] add https://github.com/nguyetdang/BioGraph.jl
+```
+
+To install optimizers that help accelerate BioGraph.jl, please follow the corresponding installation instruction and add the optimizer in Julia. You can choose one of the following optimizers: 
+* [CPLEX Optimizer (available for academic use)](https://www.ibm.com/products/ilog-cplex-optimization-studio)
+* [Gurobi Optimization (available for academic use)](https://www.gurobi.com/downloads/end-user-license-agreement-academic/)
+* [Cbc Optimizer (open-source)](https://github.com/coin-or/Cbc)
+
+To add these optimizers, type in Julia corresponding lines: 
+```julia
+] add CPLEX
+] add Gurobi
+] add Cbc
+```
+
+To use BioGraph with Jupyter Notebook, please install [IJulia.jl](https://github.com/JuliaLang/IJulia.jl)
+```julia
+] add IJulia
+] build IJulia
+```
+## How to use BioGraph.jl
+
+To load package (Cbc Optimizer will be use in this example)
+```julia
+using BioGraph, Cbc
+```
+
+To read gfa input with or without weight value
+```julia
+gfa = BioGraph.read_from_gfa("gfa_sample_1.gfa", weight_file="weight.csv")
+```
+
+To find graph component
+```julia
+graph_component = find_graph_component(gfa)
+```
+
+The length of graph_component indicates how many single graphs are availalbe in a GFA file. To find the longest path of a single graphs, please indicate the index corresponding to that graph:
+```julia
+longest_path_1 = find_longest_path(graph_component.graph[1], Cbc.Optimizer, is_weighted = true)
+```julia
+
+To output the longest path in FASTA and BED formats at current folder. Otherwise, provide the path to output directory:
+```julia
+get_fasta(longest_path_1, header="Graph1", outdir="./")
 ```
