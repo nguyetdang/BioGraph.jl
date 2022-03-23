@@ -11,7 +11,7 @@ BioGraph is a Julia package for handle genome graph in the GFA format. It reads 
 [Complete documentation is available here](https://nguyetdang.github.io/BioGraph.jl/stable)
 
 ## Installation instruction
-BioGraph.jl works at Julia LTS release v1.6.5 that can be downloaded at [https://julialang.org/downloads/](https://julialang.org/downloads/)
+BioGraph.jl works at Julia LTS release v1.6.5 that can be downloaded at [https://julialang.org/downloads/](https://julialang.org/downloads/). It works also on Julia v1.7 but has not been extensively tested on it.
 
 To install BioGraph.jl the latest stable versions of BioGraph.jl, type in Julia
 
@@ -19,12 +19,12 @@ To install BioGraph.jl the latest stable versions of BioGraph.jl, type in Julia
 ] add https://github.com/nguyetdang/BioGraph.jl
 ```
 
-To install optimizers that help accelerate BioGraph.jl, please follow the corresponding installation instruction and add the optimizer in Julia. You can choose one of the following optimizers: 
+To install optimizers that help accelerate BioGraph.jl, please follow the corresponding installation instruction and add the optimizer in Julia. You can choose one of the following optimizers:
 * [CPLEX Optimizer (available for academic use)](https://www.ibm.com/products/ilog-cplex-optimization-studio)
 * [Gurobi Optimization (available for academic use)](https://www.gurobi.com/downloads/end-user-license-agreement-academic/)
 * [Cbc Optimizer (open-source)](https://github.com/coin-or/Cbc)
 
-To add these optimizers, type in Julia corresponding lines: 
+To add these optimizers, type in Julia corresponding lines:
 ```julia
 ] add CPLEX
 ] add Gurobi
@@ -36,24 +36,27 @@ To use BioGraph with Jupyter Notebook, please install [IJulia.jl](https://github
 ] add IJulia
 ] build IJulia
 ```
+A jupyter book is provided in this github to test BioGraph.jl
+
 ## How to use BioGraph.jl
 
-To load package (Cbc Optimizer will be use in this example)
+First, load the packages (Cbc Optimizer will be use in this example)
 ```julia
 using BioGraph, Cbc
 ```
 
-To read gfa input with or without weight value
+Then, read the gfa input with or without weight value
 ```julia
 gfa = BioGraph.read_from_gfa("gfa_sample_1.gfa", weight_file="weight.csv")
 ```
 
-To find graph component
+Find the different graph components (output may be long)
 ```julia
 graph_component = find_graph_component(gfa)
 ```
 
-The length of graph_component indicates how many single graphs are availalbe in a GFA file. To find the longest path of a single graphs, please indicate the index corresponding to that graph:
+The length of graph_components indicates how many single graphs are availalbe in a GFA file. To find the longest path of a single graph, please indicate the index corresponding to that graph.
+E.g. to obtain the longest path of the graph 1, type:
 ```julia
 longest_path_1 = find_longest_path(graph_component.graph[1], Cbc.Optimizer, is_weighted = true)
 ```
