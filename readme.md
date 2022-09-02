@@ -17,3 +17,6 @@ REPL. Press `]` to enter pkg mode, and enter the following:
 ```julia
 add BioGraph
 ```
+
+## Examples of uses
+A set of Jupyter books for the application on [Asian rice genomes is available here](https://github.com/nguyetdang/AsianRiceGenomeGraph)
